@@ -14,4 +14,5 @@ export const BlackListGames = [
   "Retro",
   "Travel & Outdoors",
   "Talk Shows & Podcasts",
+  "Pools, Hot Tubs, and Beaches",
 ];

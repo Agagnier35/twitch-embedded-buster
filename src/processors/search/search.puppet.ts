@@ -1,25 +1,23 @@
-import { Browser, Page } from "puppeteer";
+import { Browser, BrowserContext, Page } from "playwright";
 import { BlacklistedWebsites } from "../../blacklists/website";
 import { SearchEngine, SearchEngines } from "../../search-engines/config";
 import { TwitchGame } from "../twitch/models/game";
 import { WikiLinks } from "../wikis/models/wiki-links";
 
 export const navigateToSearch = async (
-  browser: Browser,
+  browser: BrowserContext,
   searchEngine: SearchEngine
 ) => {
   const page = await browser.newPage();
-  await page.setUserAgent(
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
-  );
+  // await page.setUserAgent(
+  //
+  // );
 
   const engine = SearchEngines[searchEngine];
   await page.goto(engine.url, {
     waitUntil: "domcontentloaded",
   });
-  await page.waitForSelector(engine.searchSelector, {
-    visible: true,
-  });
+  await page.waitForSelector(engine.searchSelector);
   return page;
 };
 
@@ -43,7 +41,7 @@ export const searchWikis = async (
     await page.keyboard.press("Enter"),
 
     // Scrape Page 1
-    await page.waitForNavigation({ waitUntil: "domcontentloaded" }),
+    await page.waitForLoadState("domcontentloaded"),
     await page.waitForSelector(engine.linkSelector),
   ]);
   console.log(`Scrapping First Page search results for game ${game.name}...`);
@@ -60,7 +58,7 @@ export const searchWikis = async (
   //Navigate Page 2
   await Promise.all([
     await page.click(engine.pageSelector),
-    await page.waitForNetworkIdle(),
+    await page.waitForLoadState("domcontentloaded"),
   ]);
   console.log(`Scrapping Second Page search results for game ${game.name}...`);
 

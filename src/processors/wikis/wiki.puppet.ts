@@ -1,7 +1,7 @@
-import { Browser } from "puppeteer";
 import { WikiLinks } from "./models/wiki-links";
 import { WikiEmbeddedResult } from "./models/wiki-embedded-results";
 import { onlyUnique } from "../../utils/array";
+import { Browser, BrowserContext } from "playwright";
 
 export const filterUniqueDomains = (links: WikiLinks[]) =>
   Object.values(
@@ -14,27 +14,30 @@ export const filterUniqueDomains = (links: WikiLinks[]) =>
     }, {} as Record<string, WikiLinks>)
   );
 
-const navigateToWiki = async (browser: Browser, { link }: WikiLinks) => {
+const navigateToWiki = async (browser: BrowserContext, { link }: WikiLinks) => {
   const page = await browser.newPage();
-  await page.setUserAgent(
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
-  );
+  //   await page.setUserAgent(
+  //     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+  //   );
 
+  console.log(`Navigating to Wiki: ${link}`);
   await page.goto(link, {
-    waitUntil: "networkidle0",
+    waitUntil: "load",
   });
   console.log(`Loaded Wiki: ${link}`);
   return page;
 };
 
 export const findTwitchEmbed = async (
-  browser: Browser,
+  browser: BrowserContext,
   link: WikiLinks
 ): Promise<WikiEmbeddedResult> => {
   const page = await navigateToWiki(browser, link);
   try {
-    const embeddedTwitch = await page.$(
-      "script[src='https://embed.twitch.tv/embed/v1.js']"
+    const embeddedTwitch = await page.$$eval("script", (scripts) =>
+      scripts.filter((script) =>
+        script.innerHTML.includes("https://embed.twitch.tv/embed/v1.js")
+      )
     );
     console.log(
       `Embedded Twitch${embeddedTwitch ? "" : " Not"} Found on ${link.link}`
@@ -80,6 +83,6 @@ export const findTwitchEmbed = async (
     console.error(err);
     return { ...link, twitchIsEmbedded: null, channel: null };
   } finally {
-    await page.close();
+    //await page.close();
   }
 };
