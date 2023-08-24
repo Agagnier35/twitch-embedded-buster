@@ -1,42 +1,52 @@
-import puppeteer from "puppeteer";
-import { TwitchService } from "./twitch/twitch.service";
+import puppeteer from "puppeteer-extra";
+import Stealth from "puppeteer-extra-plugin-stealth";
 import "dotenv/config";
+import {
+  WikiLinks,
+  navigateToSearch,
+  searchWikis,
+} from "./processors/search/search.puppet";
+import { SearchEngine } from "./search-engines/config";
+import { TwitchService } from "./processors/twitch/twitch.service";
+import { filterUniqueDomains } from "./processors/wikis/wiki.puppet";
+
+puppeteer.use(Stealth());
 
 (async () => {
-  //   // Launch the browser and open a new blank page
-  //   const browser = await puppeteer.launch();
-  //   const page = await browser.newPage();
-
-  //   // Navigate the page to a URL
-  //   await page.goto("https://developer.chrome.com/");
-
-  //   // Set screen size
-  //   await page.setViewport({ width: 1080, height: 1024 });
-
-  //   // Type into search box
-  //   await page.type(".search-box__input", "automate beyond recorder");
-
-  //   // Wait and click on first result
-  //   const searchResultSelector = ".search-box__link";
-  //   await page.waitForSelector(searchResultSelector);
-  //   await page.click(searchResultSelector);
-
-  //   // Locate the full title with a unique string
-  //   const textSelector = await page.waitForSelector(
-  //     "text/Customize and automate"
-  //   );
-  //   const fullTitle = await textSelector?.evaluate((el) => el.textContent);
-
-  //   // Print the full title
-  //   console.log('The title of this blog post is "%s".', fullTitle);
-
-  //   await browser.close();
-
   try {
-    await TwitchService.getTopGames();
+    const games = await TwitchService.getTopGames();
+
+    const browser = await puppeteer.launch({
+      devtools: true,
+      headless: true,
+    });
+
+    try {
+      console.log("Web Browser opened");
+
+      const allLinks = await Promise.allSettled(
+        games.map(async (game) => {
+          const engine: SearchEngine = "DuckDuckGo";
+          const page = await navigateToSearch(browser, engine);
+          return searchWikis(page, engine, game);
+        })
+      );
+      const wikiLinks = allLinks
+        .filter(
+          (promise): promise is PromiseFulfilledResult<WikiLinks[]> =>
+            promise.status === "fulfilled"
+        )
+        .flatMap((promise) => promise.value);
+
+      const uniqueLinks = filterUniqueDomains(wikiLinks);
+      console.log(uniqueLinks);
+    } finally {
+      await browser.close();
+    }
     return 0;
   } catch (err) {
     console.error("Process Failed");
+    console.error(err);
     return 1;
   }
 })();

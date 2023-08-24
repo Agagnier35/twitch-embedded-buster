@@ -1,0 +1,16 @@
+export const BlackListGames = [
+  "Games + Demo",
+  "Just Chatting",
+  "Special Events",
+  "Sports",
+  "Slots",
+  "Music",
+  "I'm Only Sleeping",
+  "ASMR",
+  "Virtual Casino",
+  "Casino Jackpot",
+  "Art",
+  "Fitness & Health",
+  "Retro",
+  "Travel & Outdoors",
+];
