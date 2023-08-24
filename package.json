@@ -1,0 +1,35 @@
+{
+  "name": "twitch-embedded-buster",
+  "version": "0.0.1",
+  "description": "Snitches on embedded cheaters",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Agagnier35/twitch-embedded-buster.git"
+  },
+  "keywords": [
+    "twitch",
+    "embedded",
+    "wiki"
+  ],
+  "author": "Agagnier35",
+  "license": "ISC",
+  "homepage": "https://github.com/Agagnier35/twitch-embedded-buster#readme",
+  "scripts": {
+    "start": "npm run build && node lib/index.js",
+    "build": "tsc -p .",
+    "start:dev": "nodemon src/index.ts"
+  },
+  "dependencies": {
+    "axios": "^1.4.0",
+    "dotenv": "^16.3.1",
+    "puppeteer": "^21.1.0",
+    "querystring": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/puppeteer": "^7.0.4",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
