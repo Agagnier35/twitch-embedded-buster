@@ -1,88 +1,77 @@
 import { WikiLinks } from "./models/wiki-links";
 import { WikiEmbeddedResult } from "./models/wiki-embedded-results";
 import { onlyUnique } from "../../utils/array";
-import { Browser, BrowserContext } from "playwright";
+import { Page } from "playwright";
 
 export const filterUniqueDomains = (links: WikiLinks[]) =>
   Object.values(
     links.reduce((acc, link) => {
-      const linkURL = new URL(link.link);
-      if (!acc[linkURL.host]) {
-        acc[linkURL.host] = link;
+      try {
+        const linkURL = new URL(link.link);
+        if (!acc[linkURL.host]) {
+          acc[linkURL.host] = link;
+        }
+      } catch (err) {
+        console.error(`Invalid URL: ${link.link}`);
       }
+
       return acc;
     }, {} as Record<string, WikiLinks>)
   );
 
-const navigateToWiki = async (browser: BrowserContext, { link }: WikiLinks) => {
-  const page = await browser.newPage();
-  //   await page.setUserAgent(
-  //     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
-  //   );
-
-  console.log(`Navigating to Wiki: ${link}`);
-  await page.goto(link, {
+const navigateToWiki = async (page: Page, link: WikiLinks) => {
+  console.log(`Navigating to Wiki: ${link.link}`);
+  await page.goto(link.link, {
     waitUntil: "load",
   });
-  console.log(`Loaded Wiki: ${link}`);
-  return page;
+  // Some page are slow? and the player has not loaded yet
+  await page.waitForTimeout(2000);
+  console.log(`Loaded Wiki: ${link.link}`);
 };
 
 export const findTwitchEmbed = async (
-  browser: BrowserContext,
+  page: Page,
   link: WikiLinks
 ): Promise<WikiEmbeddedResult> => {
-  const page = await navigateToWiki(browser, link);
+  await navigateToWiki(page, link);
   try {
-    const embeddedTwitch = await page.$$eval("script", (scripts) =>
-      scripts.filter((script) =>
-        script.innerHTML.includes("https://embed.twitch.tv/embed/v1.js")
-      )
+    const embedTwitchFound = await page.$$eval(
+      "[src*='embed.twitch.tv']",
+      (e) => (e as HTMLScriptElement[] | HTMLIFrameElement[]).map((e) => e.src)
     );
+    const twitchPlayerFound = await page.$$eval(
+      "[src*='player.twitch.tv']",
+      (e) => (e as HTMLScriptElement[] | HTMLIFrameElement[]).map((e) => e.src)
+    );
+
+    const potentialMatches = embedTwitchFound.length + twitchPlayerFound.length;
+
     console.log(
-      `Embedded Twitch${embeddedTwitch ? "" : " Not"} Found on ${link.link}`
+      potentialMatches > 0
+        ? "\x1b[32m%s\x1b[0m" //green
+        : "\x1b[31m%s\x1b[0m", //red
+      `${potentialMatches} Potential Embedded Twitch Found on ${link.link}`
     );
 
     let channel: string | null = null;
-    if (embeddedTwitch) {
-      const embeddedTwitchConstructorScript = await page.$$eval(
-        "script",
-        (scripts) =>
-          scripts
-            .filter((script) => script.innerHTML.includes("Twitch.Embed"))
-            .map((script) => script.innerHTML)
-      );
 
-      console.log(
-        `Found ${embeddedTwitchConstructorScript.length} Twitch Embed scripts on ${link.link}`
-      );
-
-      if (embeddedTwitchConstructorScript) {
-        // Matches the channel field in the required options object for the Twitch API
-        // Tries to match even if the object is a JSON or a JS object with ot without the possible quotes for a string
-        const channelOptionRegex =
-          /((")*channel(")*):("|'|`)((\\("|'|`)|[^("|'|`)])*)"/;
-        const channelGroupIndex = 5;
-
-        const possibleChannelNames = embeddedTwitchConstructorScript.map(
-          (script) => script.match(channelOptionRegex)?.[channelGroupIndex]
-        );
-
-        console.log(
-          `Parsed ${possibleChannelNames.length} possible embedded losers on ${link.link}`
-        );
-        channel = possibleChannelNames.filter(onlyUnique).join(", ");
-      }
+    if (potentialMatches) {
+      channel = [...embedTwitchFound, ...twitchPlayerFound]
+        .map((src) => new URL(src).searchParams.get("channel"))
+        .filter((v): v is string => !!v)
+        .filter(onlyUnique)
+        .join(", ");
     }
+
     return {
       ...link,
-      twitchIsEmbedded: !!embeddedTwitch,
+      twitchIsEmbedded: potentialMatches > 0,
       channel,
     };
   } catch (err) {
     console.error(err);
     return { ...link, twitchIsEmbedded: null, channel: null };
   } finally {
-    //await page.close();
+    await page.close();
   }
 };

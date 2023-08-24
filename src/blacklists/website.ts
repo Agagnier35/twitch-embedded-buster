@@ -16,5 +16,6 @@ export const BlacklistedWebsites = [
   "books.google",
   "nintendolife",
   "chrome.google.com",
+  "discord",
   "msn",
 ];

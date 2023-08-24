@@ -1,31 +1,28 @@
-import { Browser, BrowserContext, Page } from "playwright";
 import { BlacklistedWebsites } from "../../blacklists/website";
 import { SearchEngine, SearchEngines } from "../../search-engines/config";
 import { TwitchGame } from "../twitch/models/game";
 import { WikiLinks } from "../wikis/models/wiki-links";
+import { Page } from "playwright";
 
 export const navigateToSearch = async (
-  browser: BrowserContext,
+  page: Page,
   searchEngine: SearchEngine
 ) => {
-  const page = await browser.newPage();
-  // await page.setUserAgent(
-  //
-  // );
-
   const engine = SearchEngines[searchEngine];
   await page.goto(engine.url, {
     waitUntil: "domcontentloaded",
   });
   await page.waitForSelector(engine.searchSelector);
-  return page;
 };
 
 export const searchWikis = async (
   page: Page,
   searchEngine: SearchEngine,
+  keyword: string,
   game: TwitchGame
 ): Promise<WikiLinks[]> => {
+  await navigateToSearch(page, searchEngine);
+
   // Input Search Query
   const engine = SearchEngines[searchEngine];
 
@@ -34,7 +31,7 @@ export const searchWikis = async (
   ).join(" ");
   await page.type(
     engine.searchSelector,
-    `${game.name} wiki ${blackListQueryString}`
+    `${game.name} ${keyword} ${blackListQueryString}`
   );
 
   await Promise.all([
@@ -44,7 +41,9 @@ export const searchWikis = async (
     await page.waitForLoadState("domcontentloaded"),
     await page.waitForSelector(engine.linkSelector),
   ]);
-  console.log(`Scrapping First Page search results for game ${game.name}...`);
+  console.log(
+    `Scrapping First Page search results for game ${game.name} (${keyword})...`
+  );
 
   const scraps1 = await page.$$eval(engine.linkSelector, async (els) =>
     (els as HTMLElement[])
@@ -60,7 +59,9 @@ export const searchWikis = async (
     await page.click(engine.pageSelector),
     await page.waitForLoadState("domcontentloaded"),
   ]);
-  console.log(`Scrapping Second Page search results for game ${game.name}...`);
+  console.log(
+    `Scrapping Second Page search results for game ${game.name} (${keyword})...`
+  );
 
   // Scrape Page 2
   const scraps2 = await page.$$eval(engine.linkSelector, async (els) =>
@@ -72,7 +73,7 @@ export const searchWikis = async (
       }))
   );
 
-  console.log(`Links scrapped for ${game.name}`);
+  console.log(`Links scrapped for ${game.name} (${keyword})`);
   await page.close();
-  return [...scraps1, ...scraps2];
+  return [...scraps1, ...scraps2].map((link) => ({ ...link, game, keyword }));
 };

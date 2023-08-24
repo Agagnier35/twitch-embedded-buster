@@ -1,7 +1,3 @@
-//import puppeteer from "puppeteer-extra";
-import { chromium } from "playwright-extra";
-import Stealth from "puppeteer-extra-plugin-stealth";
-import AdblockerPlugin from "puppeteer-extra-plugin-adblocker";
 import "dotenv/config";
 import {
   navigateToSearch,
@@ -15,54 +11,65 @@ import {
 } from "./processors/wikis/wiki.puppet";
 import { WikiLinks } from "./processors/wikis/models/wiki-links";
 import { WikiEmbeddedResult } from "./processors/wikis/models/wiki-embedded-results";
-
-chromium.use(Stealth());
-chromium.plugins.setDependencyDefaults("stealth/evasions/webgl.vendor", {
-  vendor: "Bob",
-  renderer: "Alice",
-});
+import { BasePlaywright } from "./utils/puppet";
+import { Cluster } from "playwright-cluster";
 
 (async () => {
   try {
-    //const games = await TwitchService.getTopGames();
+    const games = await TwitchService.getTopGames();
+    const keywords = ["wiki", "database"];
+    const engine: SearchEngine = "DuckDuckGo";
 
-    const browser = await chromium.launch({
-      headless: false,
+    const searchCluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_CONTEXT,
+
+      playwright: BasePlaywright,
+      maxConcurrency: 5,
     });
-    const context = await browser.newContext({
-      userAgent:
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36",
+    const wikiCluster = await Cluster.launch({
+      concurrency: Cluster.CONCURRENCY_CONTEXT,
+
+      playwright: BasePlaywright,
+      maxConcurrency: 5,
     });
 
     try {
-      console.log("Web Browser opened");
+      const links: WikiLinks[] = [];
+      await searchCluster.task(async ({ page, data }) =>
+        links.push(
+          ...(await searchWikis(page, data.engine, data.keyword, data.game))
+        )
+      );
 
-      // const allLinks = await Promise.allSettled(
-      //   games.map(async (game) => {
-      //     const engine: SearchEngine = "DuckDuckGo";
-      //     const page = await navigateToSearch(context, engine);
-      //     return searchWikis(page, engine, game);
-      //   })
-      // );
-      // const wikiLinks = allLinks
-      //   .filter(
-      //     (promise): promise is PromiseFulfilledResult<WikiLinks[]> =>
-      //       promise.status === "fulfilled"
-      //   )
-      //   .flatMap((promise) => promise.value);
-      // const uniqueLinks = filterUniqueDomains(wikiLinks);
+      const combos = games.flatMap((game) =>
+        keywords.map((keyword) => ({ engine, keyword, game }))
+      );
+      await Promise.all(combos.map((combo) => searchCluster.queue(combo)));
 
-      const uniqueLinks = [
-        {
-          title: "fextralife",
-          link: "https://baldursgate3.wiki.fextralife.com/Baldur's+Gate+3+Wiki",
-        },
-      ];
+      await searchCluster.idle();
+
+      const uniqueLinks = filterUniqueDomains(links);
+
+      // const uniqueLinks = [
+      //   {
+      //     title: "loserA",
+      //     link: "https://nwdb.info/",
+      //   },
+      //   {
+      //     title: "loserB",
+      //     link: "https://baldursgate3.wiki.fextralife.com/Baldur's+Gate+3+Wiki",
+      //   },
+      // ];
 
       console.log("Starting crawling wikis ...");
-      const reports = await Promise.all(
-        uniqueLinks.map((link) => findTwitchEmbed(context, link))
+
+      const reports: WikiEmbeddedResult[] = [];
+      await wikiCluster.task(async ({ page, data }) =>
+        reports.push(await findTwitchEmbed(page, data))
       );
+      await Promise.all(uniqueLinks.map((link) => wikiCluster.queue(link)));
+
+      await wikiCluster.idle();
 
       const losers = reports.filter((report) => report.twitchIsEmbedded);
       console.log("Losers:");
@@ -74,9 +81,10 @@ chromium.plugins.setDependencyDefaults("stealth/evasions/webgl.vendor", {
       console.log("Failed:");
       console.log(failed);
     } finally {
-      //await browser.close();
+      await searchCluster.close();
+      await wikiCluster.close();
     }
-    // return 0;
+    return 0;
   } catch (err) {
     console.error("Process Failed");
     console.error(err);
