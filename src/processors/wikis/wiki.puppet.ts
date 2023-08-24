@@ -1,10 +1,85 @@
-import { WikiLinks } from "../search/search.puppet";
+import { Browser } from "puppeteer";
+import { WikiLinks } from "./models/wiki-links";
+import { WikiEmbeddedResult } from "./models/wiki-embedded-results";
+import { onlyUnique } from "../../utils/array";
 
 export const filterUniqueDomains = (links: WikiLinks[]) =>
-  links.reduce((acc, link) => {
-    const linkURL = new URL(link.link);
-    if (!acc[linkURL.host]) {
-      acc[linkURL.host] = link;
+  Object.values(
+    links.reduce((acc, link) => {
+      const linkURL = new URL(link.link);
+      if (!acc[linkURL.host]) {
+        acc[linkURL.host] = link;
+      }
+      return acc;
+    }, {} as Record<string, WikiLinks>)
+  );
+
+const navigateToWiki = async (browser: Browser, { link }: WikiLinks) => {
+  const page = await browser.newPage();
+  await page.setUserAgent(
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36"
+  );
+
+  await page.goto(link, {
+    waitUntil: "networkidle0",
+  });
+  console.log(`Loaded Wiki: ${link}`);
+  return page;
+};
+
+export const findTwitchEmbed = async (
+  browser: Browser,
+  link: WikiLinks
+): Promise<WikiEmbeddedResult> => {
+  const page = await navigateToWiki(browser, link);
+  try {
+    const embeddedTwitch = await page.$(
+      "script[src='https://embed.twitch.tv/embed/v1.js']"
+    );
+    console.log(
+      `Embedded Twitch${embeddedTwitch ? "" : " Not"} Found on ${link.link}`
+    );
+
+    let channel: string | null = null;
+    if (embeddedTwitch) {
+      const embeddedTwitchConstructorScript = await page.$$eval(
+        "script",
+        (scripts) =>
+          scripts
+            .filter((script) => script.innerHTML.includes("Twitch.Embed"))
+            .map((script) => script.innerHTML)
+      );
+
+      console.log(
+        `Found ${embeddedTwitchConstructorScript.length} Twitch Embed scripts on ${link.link}`
+      );
+
+      if (embeddedTwitchConstructorScript) {
+        // Matches the channel field in the required options object for the Twitch API
+        // Tries to match even if the object is a JSON or a JS object with ot without the possible quotes for a string
+        const channelOptionRegex =
+          /((")*channel(")*):("|'|`)((\\("|'|`)|[^("|'|`)])*)"/;
+        const channelGroupIndex = 5;
+
+        const possibleChannelNames = embeddedTwitchConstructorScript.map(
+          (script) => script.match(channelOptionRegex)?.[channelGroupIndex]
+        );
+
+        console.log(
+          `Parsed ${possibleChannelNames.length} possible embedded losers on ${link.link}`
+        );
+        channel = possibleChannelNames.filter(onlyUnique).join(", ");
+      }
     }
-    return acc;
-  }, {} as Record<string, WikiLinks>);
+    return {
+      ...link,
+      twitchIsEmbedded: !!embeddedTwitch,
+      channel,
+    };
+  } catch (err) {
+    console.error(err);
+    return { ...link, twitchIsEmbedded: null, channel: null };
+  } finally {
+    await page.close();
+  }
+};

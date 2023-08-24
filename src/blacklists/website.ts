@@ -10,5 +10,7 @@ export const BlacklistedWebsites = [
   "pcgamingwiki.com",
   "pinterest",
   "imdb",
+  "twitch",
+  "wikibooks",
   "books.google", //WTF?
 ];
