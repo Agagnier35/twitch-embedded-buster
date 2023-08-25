@@ -31,7 +31,7 @@ The approach this crawler takes is the same as a normal person: use a search eng
 
 These are the steps the crawler will take:
 
-1. Use Twitch API to get the Top 50 games, the final results will a bit less due to blacklisted categories like Just Chatting, Special Events, etc... ([Full List](src/blacklists/games.ts))
+1. Use Twitch API to get the Top 100 games, the final results will a bit less due to blacklisted categories like Just Chatting, Special Events, etc... ([Full List](src/blacklists/games.ts))
 2. For each Game, open a Search Engine to search `<Game Name> + <keyword>`.
    - Those keywords are frequently used by these kind of websites. ([Full List](src/whitelists/keywords.ts))
    - A list of blacklisted websites is also provided to the engine ([Full List](src/blacklists/website.ts))

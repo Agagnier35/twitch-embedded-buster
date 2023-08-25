@@ -58,7 +58,7 @@ export const TwitchService = {
   getTopGames: async () => {
     console.log("Fetching all games");
     const { data }: { data: TwitchGame[] } = await TwitchAxios.get(
-      `/games/top?first=${50}`
+      `/games/top?first=${100}`
     );
 
     const actualGames = data.filter(

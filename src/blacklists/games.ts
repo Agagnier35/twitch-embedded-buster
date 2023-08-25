@@ -1,5 +1,5 @@
 export const BlackListGames = [
-  "Games + Demo",
+  "Games + Demos",
   "Just Chatting",
   "Special Events",
   "Sports",
@@ -15,4 +15,8 @@ export const BlackListGames = [
   "Travel & Outdoors",
   "Talk Shows & Podcasts",
   "Pools, Hot Tubs, and Beaches",
+  "Animals, Aquariums, and Zoos",
+  "Crypto",
+  "Poker",
+  "Food & Drink",
 ];
