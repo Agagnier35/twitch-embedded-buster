@@ -14,11 +14,12 @@ import { WikiEmbeddedResult } from "./processors/wikis/models/wiki-embedded-resu
 import { BasePlaywright } from "./utils/puppet";
 import { Cluster } from "playwright-cluster";
 import { createObjectCsvWriter } from "csv-writer";
+import { SiteKeywords } from "./whitelists/keywords";
 
 (async () => {
   try {
     const games = await TwitchService.getTopGames();
-    const keywords = ["wiki", "database"];
+
     const engine: SearchEngine = "DuckDuckGo";
 
     const searchCluster = await Cluster.launch({
@@ -43,7 +44,7 @@ import { createObjectCsvWriter } from "csv-writer";
       );
 
       const combos = games.flatMap((game) =>
-        keywords.map((keyword) => ({ engine, keyword, game }))
+        SiteKeywords.map((keyword) => ({ engine, keyword, game }))
       );
       await Promise.all(combos.map((combo) => searchCluster.queue(combo)));
 
