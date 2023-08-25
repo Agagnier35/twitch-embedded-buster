@@ -20,13 +20,13 @@ export const filterUniqueDomains = (links: WikiLinks[]) =>
   );
 
 const navigateToWiki = async (page: Page, link: WikiLinks) => {
-  console.log(`Navigating to Wiki: ${link.link}`);
+  console.log(`Navigating to ${link.keyword}: ${link.link}`);
   await page.goto(link.link, {
     waitUntil: "load",
   });
   // Some page are slow? and the player has not loaded yet
   await page.waitForTimeout(2000);
-  console.log(`Loaded Wiki: ${link.link}`);
+  console.log(`Loaded ${link.keyword}: ${link.link}`);
 };
 
 export const findTwitchEmbed = async (

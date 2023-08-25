@@ -13,6 +13,7 @@ import { WikiLinks } from "./processors/wikis/models/wiki-links";
 import { WikiEmbeddedResult } from "./processors/wikis/models/wiki-embedded-results";
 import { BasePlaywright } from "./utils/puppet";
 import { Cluster } from "playwright-cluster";
+import { createObjectCsvWriter } from "csv-writer";
 
 (async () => {
   try {
@@ -72,14 +73,25 @@ import { Cluster } from "playwright-cluster";
       await wikiCluster.idle();
 
       const losers = reports.filter((report) => report.twitchIsEmbedded);
-      console.log("Losers:");
-      console.log(losers);
-
       const failed = reports.filter(
         (report) => report.twitchIsEmbedded === null
       );
-      console.log("Failed:");
+      console.log("Failed Crawls:");
       console.log(failed);
+
+      const writer = createObjectCsvWriter({
+        path: "./busted-embedders.csv",
+        headerIdDelimiter: ".",
+        header: [
+          { id: "game.name", title: "NAME" },
+          { id: "keyword", title: "KEYWORD" },
+          { id: "title", title: "WEBSITE TITLE" },
+          { id: "link", title: "WEBSITE LINK" },
+          { id: "twitchIsEmbedded", title: "TWITCH PLAYER FOUND" },
+          { id: "channel", title: "CHANNEL NAME" },
+        ],
+      });
+      await writer.writeRecords(losers);
     } finally {
       await searchCluster.close();
       await wikiCluster.close();
