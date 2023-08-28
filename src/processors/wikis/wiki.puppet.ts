@@ -1,5 +1,8 @@
 import { WikiLinks } from "./models/wiki-links";
-import { WikiEmbeddedResult } from "./models/wiki-embedded-results";
+import {
+  PlayerParams,
+  WikiEmbeddedResult,
+} from "./models/wiki-embedded-results";
 import { onlyUnique } from "../../utils/array";
 import { Page } from "playwright";
 
@@ -53,24 +56,49 @@ export const findTwitchEmbed = async (
       `${potentialMatches} Potential Embedded Twitch Found on ${link.link}`
     );
 
-    let channel: string | null = null;
+    let playerParams: PlayerParams | null = null;
 
     if (potentialMatches) {
-      channel = [...embedTwitchFound, ...twitchPlayerFound]
-        .map((src) => new URL(src).searchParams.get("channel"))
-        .filter((v): v is string => !!v)
-        .filter(onlyUnique)
-        .join(", ");
+      playerParams = [...embedTwitchFound, ...twitchPlayerFound]
+        .map((src) => new URL(src).searchParams)
+        .map((params) => ({
+          channel: params.get("channel"),
+          height: params.get("height"),
+          muted: params.get("muted"),
+          width: params.get("width"),
+        }))
+        .reduce((acc, params) => {
+          acc.channel = [...(acc.channel?.split(", ") ?? []), params.channel]
+            .filter((v): v is string => !!v)
+            .filter(onlyUnique)
+            .join(", ");
+
+          acc.height = [...(acc.height?.split(", ") ?? []), params.height]
+            .filter((v): v is string => !!v)
+            .filter(onlyUnique)
+            .join(", ");
+
+          acc.muted = [...(acc.muted?.split(", ") ?? []), params.muted]
+            .filter((v): v is string => !!v)
+            .filter(onlyUnique)
+            .join(", ");
+
+          acc.width = [...(acc.width?.split(", ") ?? []), params.width]
+            .filter((v): v is string => !!v)
+            .filter(onlyUnique)
+            .join(", ");
+          return acc;
+        }, {} as PlayerParams);
     }
 
     return {
       ...link,
       twitchIsEmbedded: potentialMatches > 0,
-      channel,
+      playerParams,
     };
   } catch (err) {
     console.error(err);
-    return { ...link, twitchIsEmbedded: null, channel: null };
+    return { ...link, twitchIsEmbedded: null, playerParams: null };
   } finally {
     await page.close();
   }

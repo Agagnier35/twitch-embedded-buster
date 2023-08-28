@@ -73,26 +73,39 @@ import { SiteKeywords } from "./whitelists/keywords";
 
       await wikiCluster.idle();
 
+      const header = [
+        { id: "game.name", title: "NAME" },
+        { id: "keyword", title: "KEYWORD" },
+        { id: "title", title: "WEBSITE TITLE" },
+        { id: "link", title: "WEBSITE LINK" },
+        { id: "twitchIsEmbedded", title: "TWITCH PLAYER FOUND" },
+        { id: "playerParams.channel", title: "CHANNEL NAME" },
+        { id: "playerParams.width", title: "WIDTH" },
+        { id: "playerParams.height", title: "HEIGHT" },
+        { id: "playerParams.muted", title: "MUTED" },
+      ];
+
       const losers = reports.filter((report) => report.twitchIsEmbedded);
+      const loserWriter = createObjectCsvWriter({
+        path: "./busted-embedders.csv",
+        headerIdDelimiter: ".",
+        header,
+      });
+      await loserWriter.writeRecords(losers);
+
+      const noMatches = reports.filter((report) => !report.twitchIsEmbedded);
+      const noMatchesWriter = createObjectCsvWriter({
+        path: "./scanned-websites.csv",
+        headerIdDelimiter: ".",
+        header,
+      });
+      await noMatchesWriter.writeRecords(noMatches);
+
       const failed = reports.filter(
         (report) => report.twitchIsEmbedded === null
       );
       console.log("Failed Crawls:");
       console.log(failed);
-
-      const writer = createObjectCsvWriter({
-        path: "./busted-embedders.csv",
-        headerIdDelimiter: ".",
-        header: [
-          { id: "game.name", title: "NAME" },
-          { id: "keyword", title: "KEYWORD" },
-          { id: "title", title: "WEBSITE TITLE" },
-          { id: "link", title: "WEBSITE LINK" },
-          { id: "twitchIsEmbedded", title: "TWITCH PLAYER FOUND" },
-          { id: "channel", title: "CHANNEL NAME" },
-        ],
-      });
-      await writer.writeRecords(losers);
     } finally {
       await searchCluster.close();
       await wikiCluster.close();

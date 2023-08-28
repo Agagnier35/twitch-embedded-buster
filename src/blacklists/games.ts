@@ -19,4 +19,5 @@ export const BlackListGames = [
   "Crypto",
   "Poker",
   "Food & Drink",
+  "Always On",
 ];

@@ -1,1 +1,1 @@
-export const SiteKeywords = ["wiki", "database"];
+export const SiteKeywords = ["wiki", "database", "tier list", "builds"];
