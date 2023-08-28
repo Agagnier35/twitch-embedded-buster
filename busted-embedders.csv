@@ -1,37 +1,40 @@
 NAME,KEYWORD,WEBSITE TITLE,WEBSITE LINK,TWITCH PLAYER FOUND,CHANNEL NAME,WIDTH,HEIGHT,MUTED
-Grand Theft Auto V,wiki,Grand Theft Auto V (Video Game) - TV Tropes,https://tvtropes.org/pmwiki/pmwiki.php/Videogame/GrandTheftAutoV,true,,,,
+Fortnite,database,FCHQ - Fortnite Creative Map Codes : Fortnite Creative HQ,https://www.fortnitecreativehq.com/,true,FCHQio,340,398,true
+Escape from Tarkov,wiki,"Escape From Tarkov Maps - Best Stash, Loot, and Key Guide",https://www.eftmaps.net/,true,gunsway,,,true
+Escape from Tarkov,wiki,EFT | Ammo and Armor Graph,https://www.eft-ammo.com/ammo-graph,true,nofoodaftermidnight,100%,100%,
 Escape from Tarkov,database,Tarkov quests - Escape From Tarkov Quest Line Database,https://tarkov101.com/,true,pimpttv,600,550,true
-Escape from Tarkov,wiki,Escape From Tarkov Customs Map - Best Customs Loot and Key Guide,https://www.eftmaps.net/customs-map/,true,gunsway,,,true
-Escape from Tarkov,tier list,EFT | Ammo and Armor Charts,https://www.eft-ammo.com/nofoodaftermidnight,true,"nofoodaftermidnight, endra",100%,100%,
-Blasphemous II,wiki,Blasphemous 2 Wiki,https://blasphemous2.wiki.fextralife.com/Blasphemous+2+Wiki,true,fextralife,340,198,true
-Blasphemous II,builds,Builds | Blasphemous Wiki,https://blasphemous.wiki.fextralife.com/Builds,true,fextralife,340,198,true
 Dota 2,builds,How to Make Your Own Build in Dota 2 ─ Dota 2 Builds → Wewatch.gg,https://wewatch.gg/blog/how-to-make-a-dota-2-hero-build/,true,,,,
-Among Us,tier list,The scientifically proven Among Us color tier list - SQUAD,https://squadstate.com/among-us/the-scientifically-proven-among-us-color-tier-list,true,northernarena,,,
+Baldur's Gate 3,wiki,Baldurs Gate 3 Wiki,https://baldursgate3.wiki.fextralife.com/baldur's+gate+3+wiki,true,fextralife,340,198,true
+Baldur's Gate 3,wiki,Baldur's Gate 3 Guides - Fextralife,https://fextralife.com/guides/baldurs-gate-3-guides/,true,fextralife,340,398,true
+Baldur's Gate 3,builds,Best Baldur's Gate 3 Builds & Guides - BG3 - AlcastHQ,https://alcasthq.com/category/baldurs-gate-3/,true,fengrush,235,400,true
+Genshin Impact,wiki,Genshin Impact Wiki,https://genshinimpact.wiki.fextralife.com/Genshin+Impact+Wiki,true,fextralife,340,198,true
+Blasphemous II,wiki,Blasphemous 2 Wiki,https://blasphemous2.wiki.fextralife.com/Blasphemous+2+Wiki,true,fextralife,340,198,true
+Blasphemous II,wiki,Lore | Blasphemous Wiki,https://blasphemous.wiki.fextralife.com/Lore,true,fextralife,340,198,true
+Madden NFL 24,database,Madden NFL 23 Ultimate Team Database | Muthead,https://stg.muthead.com/,true,https://www.twitch.tv/Gutfoxx/,,,
 Dark and Darker,wiki,The Guide To Dark And Darker Warlock - MMO Wiki,https://mmo-wiki.com/mmo-wiki-news/the-guide-to-dark-and-darker-warlock/,true,DeanV_x,350px,210,true
-Dark and Darker,database,Dark and Darker Ruins Guide - StudioLoot,https://www.studioloot.com/dark-and-darker/articles/dark-and-darker-ruins-guide,true,"bdlg, redbyrd",100%,200,
+Dark and Darker,tier list,Dark and Darker Class Tier List - StudioLoot,https://www.studioloot.com/dark-and-darker/articles/dark-and-darker-class-tier-list,true,"bdlg, redbyrd",100%,200,
+Hearthstone,database,Top Hearthstone TITANS Decks to climb - Top 500 Legend Decks,https://hearthstone-decks.net/,true,,,,
 Hearthstone,tier list,"Let the Festivities Begin! (Apr. 25, 2023) - Hearthstone Meta Snapshot ...",https://tempostorm.com/hearthstone/meta-snapshot,true,,,,
-Hearthstone,tier list,Community Tierlist - Wild | Hearthstone,https://hearthstone-decks.net/community-tierlist-wild/,true,,,,
-Destiny 2,wiki,Stats - Destiny 2 Wiki,https://destiny2.wiki.fextralife.com/Stats,true,fextralife,340,198,true
-Destiny 2,builds,Destiny 2 Builds - Deltia's Gaming,https://deltiasgaming.com/destiny-2-builds/,true,deltiasgaming,,,true
-Guild Wars 2,builds,GW2 Builds - GuildJen - Guild Wars 2 Achievements and Guides,https://guildjen.com/builds/,true,"guildjen, vallun",,,true
+Guild Wars 2,database,GW2 Open World Builds - GuildJen - PvE Builds - Guild Wars 2,https://guildjen.com/open-world-builds/,true,"guildjen, vallun",,,true
 Black Desert,wiki,Desert Oasis: Understanding Black Desert's Black Spirit,https://massivelyop.com/2020/02/26/desert-oasis-understanding-black-deserts-black-spirit/,true,,,,
 Black Desert,builds,Gear Planner | Garmoth.com - BDO Companion,https://garmoth.com/characters,true,,,,
-Black Desert,builds,BDO Beginner Gear Progression Guide with Build Template,https://dottzgaming.com/other-games/bdo-beginner-gear-progression-guide-with-build-template/,true,dottzgaming,,,true
-Lost Ark,wiki,Lost Ark Guides - Lost Ark Database,https://lostarkdatabase.com/guides?title=Main_Page,true,VeliaInn,320,180,true
-Lost Ark,database,Lost Ark Update to Top Issues - April 1 - Lost Ark Database,https://insticator.lostarkdatabase.com/guides/lost-ark-update-to-top-issues-april-1,true,newworldordershow,270,435,true
-Lost Ark,tier list,Lost Ark Tier List - Lostarkbuilds.com,https://lostarkbuilds.com/tier-list,true,,,,
+Lost Ark,tier list,Lost Ark Tier List - Lostarkbuilds,https://lostarkbuilds.com/tier-list,true,,,,
+Lost Ark,database,Home - Lost Ark Database,https://lostarkdatabase.com/,true,VeliaInn,320,180,true
+Lost Ark,database,Lost Ark Update to Top Issues - April 1 - Lost Ark Database,https://insticator.lostarkdatabase.com/guides/lost-ark-update-to-top-issues-april-1,true,BagginsTV,270,435,true
+Lost Ark,database,Lost Ark Resources & Guides - Luxthos,https://www.luxthos.com/lost-ark-resources-guides/,true,luxthos,,,
+Lost Ark,database,Armor | Lost Ark Wiki,https://lostark.wiki.fextralife.com/Armor,true,fextralife,340,198,true
+Lost Ark,database,Guide: How to Download and Install LOST ARK in English in 2021! - MMOByte,https://www.mmobyte.tv/guide-how-to-download-and-install-lost-ark-in-english-in-2021/,true,mmobyte,300,250,true
 ELDEN RING,wiki,Elden Ring Wiki,https://eldenring.wiki.fextralife.com/Elden+Ring+Wiki,true,fextralife,340,198,true
-Albion Online,database,"Albion Online 2D Database — Meta, Market Prices, Craft Calculator",https://albiononline2d.com/,true,blackboa,,,
-Albion Online,wiki,RoguesNest,http://www.roguesnest.net/,true,"nazori, nomadponcho",400,600,true
-SMITE,wiki,Smite,https://smitegame.com/,true,smitegame,,,
-SMITE,tier list,undefined | Smitesource.com,https://smitesource.com/tierlist,true,weak3n,,,true
-Magic: The Gathering,tier list,Standard Meta Tier List - Playing MTG,https://playingmtg.com/standard/standard-tier-list/,true,,,,
-FINAL FANTASY VII,builds,Builds | Final Fantasy 7 Remake Wiki,https://finalfantasy7remake.wiki.fextralife.com/Builds,true,fextralife,340,198,true
-Palia,tier list,"Palia Farming / Crops List, Time to Grow, Harvest amounts and more!",https://gamingwithdaopa.ellatha.com/palia/farming-list-guide/,true,daopa,400,300,true
+Albion Online,wiki,Craft Calculator - Albion Online 2D Database,https://albiononline2d.com/en/craftcalculator,true,blackboa,,,
+Albion Online,wiki,Albion Online Wiki,https://wiki.albiononline.com/wiki/Albion_Online_Wiki,true,albiononline,,,
+Albion Online,database,Albion Battles,https://albionbattles.com/,true,"blackboa, jonahveil",,,true
+Albion Online,tier list,RoguesNest - Builds,https://www.roguesnest.net/BuildsLanding,true,"nazori, nomadponcho",400,600,true
+FINAL FANTASY VII,wiki,Playable Characters | Final Fantasy 7 Remake Wiki,https://finalfantasy7remake.wiki.fextralife.com/Playable+Characters,true,fextralife,340,198,true
 Red Dead Redemption 2,wiki,Red Dead Redemption 2 Wiki,https://reddeadredemption2.wiki.fextralife.com/Red+Dead+Redemption+2+Wiki,true,fextralife,340,198,true
-Super Smash Bros. Ultimate,database,Super Smash Bros. Ultimate - US Version - amazon.com,https://www.amazon.com/Super-Smash-Bros-Ultimate-Nintendo-Switch/dp/B01N5OKGLH,true,Dark_Wizzy_,100%,100%,true
+World of Tanks,database,World of Tanks Advanced Tips - WoT Guru,https://wotguru.com/general-world-of-tanks-guides/world-tanks-advanced-tips/,true,cody_menz,400,300,
 World of Tanks,builds,New World Tank Build 2023 - The Ultimate Guide for PvE,https://nwdb.info/guides/the-ultimate-tank-builds-and-guide-for-pve,true,VeliaInn,320,180,true
-World of Tanks,builds,World of Tanks Equipment Guide - WoT Guru,https://wotguru.com/general-world-of-tanks-guides/world-of-tanks-equipment-guide/,true,cody_menz,400,300,
-World of Tanks,builds,New World Tank Build 2023 - The Ultimate Guide for PvE,https://br.nwdb.info/guides/the-ultimate-tank-builds-and-guide-for-pve,true,VeliaInn,320,180,true
+BRIXITY,builds,Rebuild Earth in 'BRIXITY': Pre-Registration Open for New Sandbox City ...,https://gaminglyfe.com/rebuild-earth-in-brixity-pre-registration-open-for-new-sandbox-city-building-game/,true,,,,
+BRIXITY,tier list,undefined | Smitesource.com,https://smitesource.com/tierlist,true,weak3n,,,true
 NARAKA: BLADEPOINT,wiki,NARAKA: BLADEPOINT WIKI | NARAKA: BLADEPOINT Wiki,https://naraka.wiki/en/home,true,"rivelia, heeyyjune",500,498,true
-Garena Free Fire,tier list,Free Fire Character Tier List - Free Fire Family,https://freefirefamily.com/free-fire-character-tier-list/,true,FLAMECARVER61,,,
+SMITE,wiki,Smite,https://smitegame.com/,true,smitegame,,,
+MapleStory,database,Official MapleStory M Wiki,https://maplestorym-archive.fandom.com/wiki/MapleStory_M_Wiki,true,,,,
